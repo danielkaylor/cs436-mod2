@@ -18,7 +18,7 @@ void loop() {
   int T = digitalRead(23);
   int X = analogRead(32);
   int Y = analogRead(35);
-  Serial.printf("%d %d %d %d\n", B, T, X, Y);
+  Serial.printf("%d %d %d %d ", B, T, X, Y);
   //Serial.printf("Button is: %d | ", digitalRead(18));
   //Serial.printf("Toggle is: %d | ", digitalRead(23));
   //Serial.printf("SW is: %d | ", digitalRead(34));
