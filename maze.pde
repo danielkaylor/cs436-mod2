@@ -11,7 +11,7 @@ void setup() {
   fullScreen();
   p1Port = new Serial (this, "/dev/ttyUSB0", 115200); // need two?
   
-  p2Port = new Serial (this, "/dev/ttyUSB0", 115201);
+  p2Port = new Serial (this, "/dev/ttyUSB1", 115200);
 }
 
 //public synchronized void serialEvent(Serial port) {
