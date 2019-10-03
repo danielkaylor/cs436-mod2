@@ -5,6 +5,12 @@ Serial p2Port;
 player p1;
 player p2;
 
+//for keeping track of when game starts
+int frameStart;
+
+//for size of arena
+float d;
+
 boolean started;
 
 void setup() {
@@ -12,32 +18,61 @@ void setup() {
   started = false;
   //size(2048, 2048);
   println(Serial.list());
-  p1Port = new Serial (this, "COM5", 115200);
-  //Serial p2Port = new Serial (this, "COM4", 115200);
+  p1Port = new Serial (this, "COM3", 115200);
+  Serial p2Port = new Serial (this, "COM4", 115200);
   p1 = new player(p1Port, 400, 400);
-  //p2 = new player(p2Port, width - 400, height - 400);
+  p2 = new player(p2Port, width - 400, height - 400);
 }
 
 void fresh() {
   started = false;
-  p1 = new player(p1Port, 400, 400);
+  p1.x = p1.startx;
+  p1.y = p1.starty;
+  p2.x = p2.startx;
+  p2.y = p2.starty;
+  
+  fill(0, 0, 0);
+  rect(0, 0, width, height);
 }
 
 void draw() {
   while (!started) {
     p1.popAll();
-    started = p1.b;
+    p2.popAll();
+    started = p1.b && p2.b;
     delay(50);
+    frameStart = frameCount;
   }
-  fill(0, 10);
+  
+  fill(0, 40);
   rect(0, 0, width, height);
-  p1.popAll();
-  p1.drawMe();
-  //p2.popAll();
+  arena();
+  
+  if (distance(p1.x, p1.y, p2.x, p2.y) <= 40) {
+    fresh();
+  } else {
+    p1.popAll();
+    p1.drawMe();
+    p2.popAll();
+    p2.drawMe();
+  }
+}
+
+void arena() {
+  stroke(0, 0, 255);
+  fill(0, 0);
+  d = height - (frameCount - frameStart);
+  if( d < height/4.0 ) {
+    d = height/4.0;
+  }
+  circle(width/2, height/2, d);
 }
 
 class player {
   Serial port;
+  
+  float startx;
+  float starty;
 
   boolean b;
   boolean t;
@@ -48,13 +83,15 @@ class player {
   int dy;
 
   color c;
+  
+  int points;
 
   player(Serial nPort, float nx, float ny) {
     b = false;
     t = false;
     port = nPort;
-    nx = x;
-    ny = y;
+    x = startx = nx;
+    y = starty = ny;
     dx = 0;
     dy = 0;
     c = color(225, 200, 175);
@@ -99,11 +136,20 @@ class player {
       dx -= 1882;
       dy -= 1910;
 
-      dx /= 500;
-      dy /= 500;
+      dx /= width/10.0;
+      dy /= height/10.0;
       //println("B: " + this.b + " | T: " + this.t + " | X: " + this.dx + " | Y: " + this.dy);
     }
     x -= dy;
     y += dx;
   }
+}
+
+public static float distance(float x1, float y1, float x2, float y2) {
+    float sum = 0.0;
+    
+    sum += Math.pow((x1 - x2), 2.0);
+    sum += Math.pow((y1 - y2), 2.0);
+
+    return (float) Math.sqrt(sum);
 }
