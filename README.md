@@ -16,6 +16,6 @@ Verified to run on Linux/Windows, you will need to edit the COM numbers for the 
 Designed on Arduino IDE and Processing IDE.
 
 A circuit diagram can be found in the directory under circuit.jpg
-
+An example console (modelled in foam) can be seen in console.jpg
 Please refer to the links below for videos of the game in action!
 
